@@ -1,6 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
+
+type SavedResearch = { id: number; research_query: string; research_summary: string; created_at: string };
 
 const globalExamples = [
   { name: "MSCI ESG Ratings", detail: "Rates companies on financially relevant, industry-specific sustainability risks and opportunities.", source: "https://www.msci.com/data-and-analytics/sustainability-solutions/esg-ratings" },
@@ -24,6 +31,9 @@ const competitors = [
 export default function ResearchPage() {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("All");
+  const [researchQuery, setResearchQuery] = useState("Sustainable investment platforms");
+  const [savedResearch, setSavedResearch] = useState<SavedResearch[]>([]);
+  const [saveStatus, setSaveStatus] = useState("");
 
   const types = useMemo(() => ["All", ...Array.from(new Set(competitors.map((item) => item.type)))], []);
 
@@ -40,6 +50,26 @@ export default function ResearchPage() {
     });
   }, [search, typeFilter]);
 
+  useEffect(() => {
+    async function loadSavedResearch() {
+      if (!supabase) return;
+      const { data } = await supabase.from("research_outputs").select("*").order("created_at", { ascending: false }).limit(10);
+      if (data) setSavedResearch(data as SavedResearch[]);
+    }
+    loadSavedResearch();
+  }, []);
+
+  async function saveResearch() {
+    if (!supabase) { setSaveStatus("Supabase environment variables are not configured."); return; }
+    const query = researchQuery.trim() || "Sustainable investment platforms";
+    const summary = "Research includes 5 global examples, Mexico sustainable-finance context, 8 competitors/substitutes, comparison filters, and a competitive risk map.";
+    setSaveStatus("Saving...");
+    const { data, error } = await supabase.from("research_outputs").insert({ research_query: query, research_summary: summary }).select().single();
+    if (error) { setSaveStatus("Could not save research."); return; }
+    setSavedResearch((items) => [data as SavedResearch, ...items]);
+    setSaveStatus("Research saved.");
+  }
+
   return (
     <main className="container researchPage">
       <header className="researchHeader">
@@ -54,8 +84,8 @@ export default function ResearchPage() {
       <section className="researchSection">
         <p className="label">Research intake</p>
         <div className="researchInputRow">
-          <input aria-label="Research topic" placeholder="Example: Sustainable investment platforms" />
-          <button type="button">Research</button>
+          <input aria-label="Research topic" value={researchQuery} onChange={(event) => setResearchQuery(event.target.value)} placeholder="Example: Sustainable investment platforms" />
+          <button type="button" onClick={() => setSearch(researchQuery)}>Research</button>
         </div>
       </section>
 
@@ -139,9 +169,19 @@ export default function ResearchPage() {
       <section className="researchSection">
         <div className="sectionHeading">
           <div><p className="label">Saved research</p><h2>Saved Results</h2></div>
-          <button type="button" disabled>Save Research</button>
+          <button type="button" onClick={saveResearch}>Save Research</button>
         </div>
-        <p className="sectionText">Supabase saving and saved results will be connected in a later Week 2 commit.</p>
+        <p className="sectionText">{saveStatus || "Save the current Week 2 research summary to Supabase."}</p>
+        <div className="cards">
+          {savedResearch.map((item) => (
+            <article className="researchCard" key={item.id}>
+              <p className="label">{new Date(item.created_at).toLocaleDateString()}</p>
+              <h3>{item.research_query}</h3>
+              <p>{item.research_summary}</p>
+            </article>
+          ))}
+          {savedResearch.length === 0 && <p className="sectionText">No saved research yet.</p>}
+        </div>
       </section>
     </main>
   );
