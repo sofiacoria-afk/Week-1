@@ -1,17 +1,50 @@
 :root { color-scheme: light; }
 * { box-sizing: border-box; }
 body { margin: 0; font-family: Arial, sans-serif; background: #f6faf7; color: #15351f; }
-.container { max-width: 920px; margin: 0 auto; padding: 64px 24px; }
+a { color: #1f7a3f; }
+button, input, select { font: inherit; }
+button, .primaryLink { background: #1f7a3f; color: white; border: 0; border-radius: 10px; padding: 12px 16px; font-weight: 700; cursor: pointer; text-decoration: none; }
+.container { max-width: 1000px; margin: 0 auto; padding: 64px 24px; }
 .eyebrow { color: #1f7a3f; font-weight: 700; letter-spacing: .08em; }
 h1 { font-size: clamp(2rem, 6vw, 4rem); line-height: 1.05; margin: 12px 0 20px; }
 .subtitle { max-width: 760px; color: #5b6f60; font-size: 1.1rem; line-height: 1.6; }
 .searchBox { margin: 32px 0 24px; display: grid; gap: 8px; }
 .searchBox label, .label { font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #607565; }
-.searchBox input { width: 100%; padding: 14px 16px; border: 1px solid #bfd2c3; border-radius: 10px; font-size: 1rem; background: white; }
+.searchBox input, .researchInputRow input, .comparisonControls input, .comparisonControls select { width: 100%; padding: 14px 16px; border: 1px solid #bfd2c3; border-radius: 10px; font-size: 1rem; background: white; }
 .cards { display: grid; gap: 16px; }
 .card { background: white; border: 1px solid #dfe9e1; border-radius: 16px; padding: 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 .card h2 { margin: 4px 0 6px; }
 .ticker { margin: 0; color: #55705d; }
 .pending { font-weight: 700; color: #8a5a00; }
-.note { color: #66776b; line-height: 1.5; }
-@media (max-width: 700px) { .card { grid-template-columns: 1fr; } }
+.note, .sectionText { color: #66776b; line-height: 1.5; }
+.dashboardLink { margin: 32px 0; background: #e9f5ec; border: 1px solid #cce1d1; border-radius: 16px; padding: 22px; display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+.dashboardLink h2 { margin: 4px 0 8px; }
+.dashboardLink p { margin-bottom: 0; }
+.primaryLink { white-space: nowrap; }
+.researchHeader, .sectionHeading { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
+.homeLink { margin-top: 12px; font-weight: 700; }
+.researchSection { margin-top: 28px; background: white; border: 1px solid #dfe9e1; border-radius: 16px; padding: 24px; }
+.researchSection h2 { margin-top: 6px; }
+.researchInputRow, .comparisonControls { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+.benchmarkGrid, .competitorGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.researchCard { background: #f9fcfa; border: 1px solid #dfe9e1; border-radius: 12px; padding: 18px; min-width: 0; }
+.researchCard h3 { margin: 6px 0 10px; }
+.researchCard p { line-height: 1.5; }
+.statusPill, .riskBadge { display: inline-block; border-radius: 999px; padding: 7px 10px; background: #e9f5ec; font-size: .78rem; font-weight: 700; }
+.comparisonControls { grid-template-columns: 1fr minmax(180px, 240px); margin: 16px 0; }
+.comparisonTableWrap { overflow-x: auto; }
+.comparisonTable { width: 100%; border-collapse: collapse; min-width: 680px; }
+.comparisonTable th, .comparisonTable td { text-align: left; padding: 12px; border-bottom: 1px solid #e2ebe4; vertical-align: top; }
+.comparisonTable th { color: #607565; font-size: .8rem; }
+.riskGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.riskCard { border: 1px solid #dfe9e1; border-radius: 12px; padding: 16px; display: grid; gap: 8px; }
+.riskCard.low, .riskBadge.low { background: #edf8ef; }
+.riskCard.medium, .riskBadge.medium { background: #fff7df; }
+.riskCard.high, .riskBadge.high { background: #fff0ed; }
+.emptyState { padding: 16px; color: #66776b; }
+@media (max-width: 700px) {
+  .container { padding: 36px 16px; }
+  .card, .benchmarkGrid, .competitorGrid, .riskGrid, .comparisonControls, .researchInputRow { grid-template-columns: 1fr; }
+  .researchHeader, .sectionHeading, .dashboardLink { flex-direction: column; }
+  .primaryLink { white-space: normal; }
+}

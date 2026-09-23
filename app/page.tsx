@@ -19,8 +19,17 @@ export default function Home() {
       <p className="eyebrow">GREENInvest</p>
       <h1>Financial + environmental information in one place</h1>
       <p className="subtitle">
-        Search the first five companies in the prototype. Environmental records will use verified annual company reports as the primary source.
+        Search the first five companies in the prototype. Environmental records use verified annual company reports as the primary source.
       </p>
+
+      <section className="dashboardLink">
+        <div>
+          <p className="label">Week 2</p>
+          <h2>Research + Benchmarking Dashboard</h2>
+          <p>Explore global benchmarks, Mexico research, competitors, filters, risks, and saved research.</p>
+        </div>
+        <a className="primaryLink" href="/research">Open Research Dashboard</a>
+      </section>
 
       <section className="searchBox">
         <label htmlFor="company-search">Search company or ticker</label>
